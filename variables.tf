@@ -15,13 +15,13 @@
 variable "ami_id" {
   description = "The ID of the AMI to run in the cluster. This should be an AMI built from the Packer template under examples/consul-ami/consul.json. To keep this example simple, we run the same AMI on both server and client nodes, but in real-world usage, your client nodes would also run your apps. If the default value is used, Terraform will look up the latest AMI build automatically."
   type        = string
-  default     = null
+  default     = "ami-05bce8fda21b4c4b6"
 }
 
 variable "cluster_name" {
   description = "What to name the Consul cluster and all of its associated resources"
   type        = string
-  default     = "consul-example"
+  default     = "consul"
 }
 
 variable "num_servers" {
@@ -33,7 +33,7 @@ variable "num_servers" {
 variable "num_clients" {
   description = "The number of Consul client nodes to deploy. You typically run the Consul client alongside your apps, so set this value to however many Instances make sense for your app code."
   type        = number
-  default     = 6
+  default     = 1
 }
 
 variable "cluster_tag_key" {
@@ -45,13 +45,13 @@ variable "cluster_tag_key" {
 variable "ssh_key_name" {
   description = "The name of an EC2 Key Pair that can be used to SSH to the EC2 Instances in this cluster. Set to an empty string to not associate a Key Pair."
   type        = string
-  default     = null
+  default     = "jeff.white1"
 }
 
 variable "vpc_id" {
   description = "The ID of the VPC in which the nodes will be deployed.  Uses default VPC if not supplied."
   type        = string
-  default     = null
+  default     = "vpc-00608066"
 }
 
 variable "spot_price" {

@@ -4,31 +4,40 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "cluster_name" {
+  default     = "consul"
   description = "The name of the Consul cluster (e.g. consul-stage). This variable is used to namespace all resources created by this module."
   type        = string
 }
 
 variable "ami_id" {
+  default     = "ami-05bce8fda21b4c4b6"
   description = "The ID of the AMI to run in this cluster. Should be an AMI that had Consul installed and configured by the install-consul module."
   type        = string
 }
 
 variable "instance_type" {
+  default     = "m5a.large"
   description = "The type of EC2 Instances to run for each node in the cluster (e.g. t2.micro)."
   type        = string
 }
 
 variable "vpc_id" {
+  default     = "vpc-00608066"
   description = "The ID of the VPC in which to deploy the Consul cluster"
   type        = string
 }
 
 variable "allowed_inbound_cidr_blocks" {
+  default     = ["0.0.0.0/0"]
   description = "A list of CIDR-formatted IP address ranges from which the EC2 Instances will allow connections to Consul"
   type        = list(string)
 }
 
 variable "user_data" {
+  default     = <<-EOF
+                #!/bin/bash
+                /opt/consul/bin/run-consul --server --cluster-tag-key consul-servers --cluster-tag-value consul
+              EOF
   description = "A User Data script to execute while the server is booting. We recommend passing in a bash script that executes the run-consul script, which should have been installed in the Consul AMI by the install-consul module."
   type        = string
 }
@@ -53,13 +62,13 @@ variable "cluster_tag_key" {
 variable "cluster_tag_value" {
   description = "Add a tag with key var.clsuter_tag_key and this value to each Instance in the ASG. This can be used to automatically find other Consul nodes and form a cluster."
   type        = string
-  default     = "auto-join"
+  default     = "consul"
 }
 
 variable "subnet_ids" {
   description = "The subnet IDs into which the EC2 Instances should be deployed. We recommend one subnet ID per node in the cluster_size variable. At least one of var.subnet_ids or var.availability_zones must be non-empty."
   type        = list(string)
-  default     = null
+  default     = ["subnet-aab128e3","subnet-779a382c"]
 }
 
 variable "availability_zones" {
@@ -71,13 +80,13 @@ variable "availability_zones" {
 variable "ssh_key_name" {
   description = "The name of an EC2 Key Pair that can be used to SSH to the EC2 Instances in this cluster. Set to an empty string to not associate a Key Pair."
   type        = string
-  default     = null
+  default     = "jeff.white1"
 }
 
 variable "allowed_ssh_cidr_blocks" {
   description = "A list of CIDR-formatted IP address ranges from which the EC2 Instances will allow SSH connections"
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 variable "allowed_ssh_security_group_ids" {
@@ -125,7 +134,7 @@ variable "termination_policies" {
 variable "associate_public_ip_address" {
   description = "If set to true, associate a public IP address with each EC2 Instance in the cluster."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "spot_price" {
@@ -149,7 +158,7 @@ variable "root_volume_ebs_optimized" {
 variable "root_volume_type" {
   description = "The type of volume. Must be one of: standard, gp2, or io1."
   type        = string
-  default     = "standard"
+  default     = "gp2"
 }
 
 variable "root_volume_size" {

@@ -10,10 +10,14 @@ variable "download_url" {
   default = "https://releases.hashicorp.com/consul/1.8.5/consul_1.8.5_linux_amd64.zip"
 }
 
+variable "access_key" {}
+
+variable "secret_key" {}
+
 source "amazon-ebs" "consul" {
   ami_name         = "consul"
-  access_key       = "***REMOVED***"
-  secret_key       = "***REMOVED***"
+  access_key       = var.access_key
+  secret_key       = var.secret_key
   source_ami       = "ami-029c0fbe456d58bd1"
   region           = var.aws_region
   ami_description  = "A RHEL 7.7 Image that has Consul installed."
